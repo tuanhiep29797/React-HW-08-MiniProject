@@ -1,0 +1,159 @@
+iimport { EditOutlined, SaveOutlined } from "@ant-design/icons";
+import { Button, Form, Modal, Row, Space, Table, Tag, Col, Input } from "antd";
+import { useEffect, useState } from "react";
+
+const App = () => {
+  const [form] = Form.useForm();
+  const [isOpen, setIsOpen] = useState(false);
+  const [edit, setEdit] = useState(false);
+  const [record, setRecord] = useState({});
+
+  const columns = [
+    {
+      title: "Name",
+      dataIndex: "name",
+      key: "name",
+      render: (text) => <a>{text}</a>,
+    },
+    {
+      title: "Age",
+      dataIndex: "age",
+      key: "age",
+    },
+    {
+      title: "Address",
+      dataIndex: "address",
+      key: "address",
+    },
+    {
+      title: "Tags",
+      key: "tags",
+      dataIndex: "tags",
+      render: (_, { tags }) => (
+        <>
+          {tags.map((tag) => {
+            let color = tag.length > 5 ? "geekblue" : "green";
+            if (tag === "loser") {
+              color = "volcano";
+            }
+            return (
+              <Tag color={color} key={tag}>
+                {tag.toUpperCase()}
+              </Tag>
+            );
+          })}
+        </>
+      ),
+    },
+    {
+      title: "Action",
+      key: "action",
+      render: (_, record) => (
+        <Space size="middle">
+          <Button
+            icon={<EditOutlined />}
+            onClick={() => {
+              setEdit(true);
+              setIsOpen(true);
+              setRecord(record);
+            }}
+          />
+        </Space>
+      ),
+    },
+  ];
+
+  const data = [
+    {
+      key: "1",
+      name: "John Brown",
+      age: 32,
+      address: "New York No. 1 Lake Park",
+      tags: ["nice", "developer"],
+    },
+    {
+      key: "2",
+      name: "Jim Green",
+      age: 42,
+      address: "London No. 1 Lake Park",
+      tags: ["loser"],
+    },
+    {
+      key: "3",
+      name: "Joe Black",
+      age: 32,
+      address: "Sydney No. 1 Lake Park",
+      tags: ["cool", "teacher"],
+    },
+  ];
+
+  console.log(record, "record");
+
+  useEffect(() => {
+    if (edit) {
+      // thực hiện thao tác fill data vào form
+      form.setFieldsValue(record);
+    } else {
+      form.resetFields();
+    }
+  }, [edit, record, isOpen]);
+
+  return (
+    <div className="App">
+      <Button
+        onClick={() => {
+          setEdit(false);
+          setIsOpen(true);
+        }}
+      >
+        Thêm người dùng
+      </Button>
+      <Table columns={columns} dataSource={data} />
+      <Modal
+        title={`${edit ? "Chỉnh sửa người dùng" : "Thêm mới người dùng"}`}
+        open={isOpen}
+        onCancel={() => setIsOpen(false)}
+        onOk={() => setIsOpen(false)}
+
+        // onOk={handleOk}
+        // onCancel={handleCancel}
+      >
+        <Form
+          layout="vertical"
+          form={form}
+          onFinish={(values) => console.log(values)}
+        >
+          <Row gutter={[24, 24]}>
+            <Col xs={24} md={12}>
+              <Form.Item
+                label="Tên"
+                name="name"
+rules={[{ required: true }]}
+                // initialValue={"Nguyen Van A"}
+              >
+                <Input placeholder="Nhập nội dung" />
+              </Form.Item>
+            </Col>
+            <Col xs={24} md={12}>
+              <Form.Item label="Địa chỉ" name="address">
+                <Input placeholder="Nhập nội dung" />
+              </Form.Item>
+            </Col>
+          </Row>
+          {/* <Form.Item>
+            <Button
+              type="primary"
+              htmlType="submit"
+              icon={<SaveOutlined />}
+              // onClick={() => console.log(form.getFieldsValue(), "values")}
+            >
+              Submit
+            </Button>
+          </Form.Item> */}
+        </Form>
+      </Modal>
+    </div>
+  );
+};
+
+export default App;
