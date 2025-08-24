@@ -3,6 +3,7 @@ import { Breadcrumb, Col, Divider, Row } from "antd";
 import { Button, Card, Flex, Typography } from "antd";
 import { Link } from "react-router-dom";
 const Dashboard = () => {
+  const isAdmin = (localStorage.getItem("isAdmin") === "true");
   const cardStyle = {
     width: 585,
   };
@@ -44,7 +45,8 @@ const Dashboard = () => {
                 style={{ padding: 32 }}
               >
                 <Typography.Title level={1}>
-                  User List Management
+                  {isAdmin ? (<>User List Management</>) : (<>User List</>)}
+                  
                 </Typography.Title>
                 <Link to="/users">
                   <Button type="primary">User List</Button>
@@ -79,7 +81,7 @@ const Dashboard = () => {
                 style={{ padding: 32 }}
               >
                 <Typography.Title level={1}>
-                  Product List Management
+                  {isAdmin ? (<>Product List Management</>) : (<>Product List</>)}
                 </Typography.Title>
                 <Link to="/products">
                   <Button type="primary">Product List</Button>
